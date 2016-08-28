@@ -12,7 +12,7 @@ class MainMenu(object):
 
     current_screen = 'main'
     game_on = False
-    relative_controls = True
+    relative_controls = False
 
     def __init__(self):
         self.keyboard_bindings()

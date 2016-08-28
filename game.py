@@ -18,7 +18,7 @@ class Game(object):
 
     game_on = False
 
-    def __init__(self, width=None, height=None, relative_controls=True):
+    def __init__(self, width=None, height=None, relative_controls=False):
         self.width = width
         self.height = height
         self.relative_controls = relative_controls
@@ -159,7 +159,6 @@ class Game(object):
 
     def set_relative_keyboard_bindings(self):
         """Maps relative controls to player movement."""
-        turtle.listen()
         # Set P1 keyboard bindings
         turtle.onkeypress(self.P1.turn_left, 'a')
         turtle.onkeypress(self.P1.turn_right, 'd')
@@ -174,49 +173,31 @@ class Game(object):
 
     def set_abs_keyboard_bindings(self):
         """Maps absolute controls to player movement."""
-        turtle.listen()
+        
         # Set P1 keyboard bindings
         if self.P1.heading() == 0: # East
-            turtle.onkeypress(self.P1.turn_left, 'w')
-            turtle.onkeypress(self.P1.turn_right, 's')
-            turtle.onkeypress(self.P1.accelerate, 'd')
-            turtle.onkeypress(self.P1.decelerate, 'a')
+            self.abs_key_mapper(self.P1, 'w', 's', 'd', 'a')
         elif self.P1.heading() == 90: # North
-            turtle.onkeypress(self.P1.turn_left, 'a')
-            turtle.onkeypress(self.P1.turn_right, 'd')
-            turtle.onkeypress(self.P1.accelerate, 'w')
-            turtle.onkeypress(self.P1.decelerate, 's')
+            self.abs_key_mapper(self.P1, 'a', 'd', 'w', 's')
         elif self.P1.heading() == 180: # West
-            turtle.onkeypress(self.P1.turn_left, 's')
-            turtle.onkeypress(self.P1.turn_right, 'w')
-            turtle.onkeypress(self.P1.accelerate, 'a')
-            turtle.onkeypress(self.P1.decelerate, 'd')
+            self.abs_key_mapper(self.P1, 's', 'w', 'a', 'd')
         elif self.P1.heading() == 270: # South
-            turtle.onkeypress(self.P1.turn_left, 'd')
-            turtle.onkeypress(self.P1.turn_right, 'a')
-            turtle.onkeypress(self.P1.accelerate, 's')
-            turtle.onkeypress(self.P1.decelerate, 'w')
-        # Set P1 keyboard bindings
+            self.abs_key_mapper(self.P1, 'd', 'a', 's', 'w')
+        # Set P2 keyboard bindings
         if self.P2.heading() == 0: # East
-            turtle.onkeypress(self.P2.turn_left, 'Up')
-            turtle.onkeypress(self.P2.turn_right, 'Down')
-            turtle.onkeypress(self.P2.accelerate, 'Right')
-            turtle.onkeypress(self.P2.decelerate, 'Left')
+            self.abs_key_mapper(self.P2, 'Up', 'Down', 'Right', 'Left')
         elif self.P2.heading() == 90: # North
-            turtle.onkeypress(self.P2.turn_left, 'Left')
-            turtle.onkeypress(self.P2.turn_right, 'Right')
-            turtle.onkeypress(self.P2.accelerate, 'Up')
-            turtle.onkeypress(self.P2.decelerate, 'Down')
+            self.abs_key_mapper(self.P2, 'Left', 'Right', 'Up', 'Down')
         elif self.P2.heading() == 180: # West
-            turtle.onkeypress(self.P2.turn_left, 'Down')
-            turtle.onkeypress(self.P2.turn_right, 'Up')
-            turtle.onkeypress(self.P2.accelerate, 'Left')
-            turtle.onkeypress(self.P2.decelerate, 'Right')
+            self.abs_key_mapper(self.P2, 'Down', 'Up', 'Left', 'Right')
         elif self.P2.heading() == 270: # South
-            turtle.onkeypress(self.P2.turn_left, 'Right')
-            turtle.onkeypress(self.P2.turn_right, 'Left')
-            turtle.onkeypress(self.P2.accelerate, 'Down')
-            turtle.onkeypress(self.P2.decelerate, 'Up')
+            self.abs_key_mapper(self.P2, 'Right', 'Left', 'Down', 'Up')            
+
+    def abs_key_mapper(self, player, left, right, accel, decel):
+        turtle.onkeypress(player.turn_left, left)
+        turtle.onkeypress(player.turn_right, right)
+        turtle.onkeypress(player.accelerate, accel)
+        turtle.onkeypress(player.decelerate, decel)
 
 
     def draw_score(self):
@@ -272,6 +253,9 @@ class Game(object):
                 self.set_relative_keyboard_bindings()
             else:
                 self.set_abs_keyboard_bindings()
+
+            # Activate key mappings
+            turtle.listen()
 
             # Set players into motion
             self.P1.forward(self.P1.fd_speed)
