@@ -80,9 +80,7 @@ class Game(object):
         Deviation of 3 on edge to cosmetically match impact."""
         if ((player.xcor() < (-self.x_boundary + 3)) or (player.xcor() > (self.x_boundary - 3)) or
             (player.ycor() < (-self.y_boundary + 3)) or (player.ycor() > (self.y_boundary - 3))):
-                for particle in self.particles:
-                    particle.change_color(player)
-                    particle.explode(player.xcor(), player.ycor())
+                self.particles_explode(player)
                 player.lives -= 1
                 player.status = player.CRASHED
 
@@ -209,6 +207,10 @@ class Game(object):
         self.score_pen.penup()
         self.score_pen.hideturtle()
 
+    def is_game_over(self):
+        if self.P1.lives == 0 or self.P2.lives == 0:
+            return True
+
     def display_winner(self, player, other):
         """Once game loop finishes, this runs to display the winner."""
         self.score_pen.setposition(0, 0)
@@ -236,7 +238,7 @@ class Game(object):
             os.system('afplay sounds/son_of_flynn.m4a&')
             os.system('say grid is live!')
 
-        while self.P1.lives > 0 and self.P2.lives > 0:
+        while self.game_on:
             # Updates screen only when loop is complete
             turtle.update()
             # Set controls based on menu setting
@@ -280,9 +282,12 @@ class Game(object):
                 if os.name == 'posix':
                     os.system('afplay sounds/explosion.wav&')
                 self.draw_score()
+
+            if self.is_game_over():
+                self.game_on = False
+
         # Game ends
         self.display_winner(self.P1, self.P2)
-        self.game_on = False
         time.sleep(3)
         self.screen.clear()
         if os.name == 'posix':
