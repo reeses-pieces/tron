@@ -140,18 +140,9 @@ class Game(object):
 
     def is_collision(self, player, other):
         """Collision check. Self and with other player."""
-        # Player collides into own trail (suicide)
+        # Player collides into own trail (suicide) or into opponenet
         for position in player.positions[-3:]: # 3 positions to cover speed gap (0 - 2)
-            if position in player.positions[:-3]:
-                player.lives -= 1
-                # Particle explosion
-                self.particles_explode(player)
-                player.status = player.CRASHED
-
-        # Player collides into other player.
-        # Covers speed increase, thus 3 positions are checked
-        for position in player.positions[-3:]:
-            if position in other.positions:
+            if position in player.positions[:-3] or position in other.positions:
                 player.lives -= 1
                 # Particle explosion
                 self.particles_explode(player)
