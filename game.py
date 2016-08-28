@@ -85,7 +85,7 @@ class Game(object):
                 player.status = player.CRASHED
 
     def position_range_adder(self, player_positions):
-        """If speed is > 1, the positions aren't recorded in between the speed. Therefore,
+        """If speed is > 1, the positions aren't recorded between the speed gap. Therefore,
         this function is needed to fill in the gaps and append the missing positions"""
         prev_x_pos, prev_y_pos = player_positions[-2] # tuple unpacking
         next_x_pos, next_y_pos = player_positions[-1]
