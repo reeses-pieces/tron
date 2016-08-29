@@ -6,11 +6,10 @@ import time
 import os
 
 # Welcome to Turtle TRON! The object of the game is to stay alive the longest by not crashing into the walls
-# or the opponent's trails. Game resets when either player crashes.
+# the opponent's trails, or the boundaries. Game resets when either player crashes.
 # Options: Grid size
 
-# Currently set to relative key bindings. I need the menu class to save a class attribute
-# that stores the controls setting.
+# Currently set to absolute key bindings.
 
 class Game(object):
     """Creates screen, draws border, creates all sprites, maps keys, draws score, and
@@ -115,12 +114,10 @@ class Game(object):
         P2 is Yellow"""
         # Create player 1
         self.P1 = Player('P1', -100, 100)
-        self.P1.speed(0)
         self.P1.color('#40BBE3')
 
         # Create player 2
         self.P2 = Player('P2', 100, -100)
-        self.P2.speed(0)
         self.P2.color('#E3E329')
 
     def create_particles(self):
@@ -139,8 +136,10 @@ class Game(object):
     def is_collision(self, player, other):
         """Collision check. Self and with other player."""
         # Player collides into own trail (suicide) or into opponenet
-        for position in player.positions[-3:]: # 3 positions to cover speed gap (0 - 2)
-            if position in player.positions[:-3] or position in other.positions:
+        if player.pos() in player.positions[:-6] or player.pos() in other.positions:
+
+        # for position in player.positions[-3:]: # 3 positions to cover speed gap (0 - 2)
+        #     if position in player.positions[:-3] or position in other.positions:
                 player.lives -= 1
                 # Particle explosion
                 self.particles_explode(player)
@@ -302,6 +301,7 @@ class Player(turtle.Turtle):
     def __init__(self, name, start_x, start_y):
         super(Player, self).__init__()
         self.name = name
+        self.speed(0)
         self.fd_speed = 1
         self.pensize(2)
         self.start_x = start_x
