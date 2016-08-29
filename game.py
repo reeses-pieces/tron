@@ -74,6 +74,11 @@ class Game(object):
         self.pen.penup()
         self.pen.hideturtle()
 
+    def random_coord(self):
+        x = random.randint(-(self.width / 2) + 100, (self.width / 2) - 100)
+        y = random.randint(-(self.height / 2) + 100, (self.height / 2) - 100)
+        return (x, y)
+
     def boundary_check(self, player):
         """Checks if light cycle is out of bounds using border coord.
         Deviation of 3 on edge to cosmetically match impact."""
@@ -117,9 +122,8 @@ class Game(object):
         colors = ['#40BBE3','#E3E329', '#ff0000', '#33cc33']
         
         for i in range(number):
-            random_x = random.randint(-(self.width / 2) + 100, (self.width / 2) - 100)
-            random_y = random.randint(-(self.height / 2) + 100, (self.height / 2) - 100)
-            self.players.append(Player('P' + str(i + 1), random_x, random_y))
+            x, y = self.random_coord()
+            self.players.append(Player('P' + str(i + 1), x, y))
             self.players[i].color(colors[i])
 
     def create_particles(self):
@@ -138,10 +142,8 @@ class Game(object):
     def is_collision(self, player, other):
         """Collision check. Self and with other player."""
         # Player collides into own trail (suicide) or into opponenet
-        # if player.coord in player.positions[:-6] or player.coord() in other.positions:
-
         for position in player.positions[-3:]: # 3 positions to cover speed gap (0 - 2)
-            if position in player.positions[:-6] or position in other.positions:
+            if position in player.positions[:-3] or position in other.positions:
                 player.lives -= 1
                 # Particle explosion
                 self.particles_explode(player)
@@ -225,7 +227,9 @@ class Game(object):
 
     def reset(self):
         for player in self.players:
+            x, y = self.random_coord()
             player.crash()
+            player.respawn(x, y)
 
     def start_game(self):
         """All players are set into motion, boundary checks, and collision checks
@@ -256,18 +260,10 @@ class Game(object):
             # Activate key mappings
             turtle.listen()
 
-            # Set players into motion, boundary check,
+            # Set players into motion, boundary check, add converted coords to positions
             for player in self.players:
                 player.forward(player.fd_speed)
                 self.boundary_check(player)
-                
-
-            # Particle movement
-            for particle in self.particles:
-                particle.move()
-
-            # Coercing coordinates and appending to list
-            for player in self.players:
                 player.convert_coord_to_int()
                 player.positions.append(player.coord)
                 # FINDING DUPLICATE POSITIONS!!
@@ -275,20 +271,24 @@ class Game(object):
                 #     for position in player.positions:
                 #         if player.positions.count(position) > 1:
                 #             print('Found duplicate', position)
-            # Start evaluating positions for gaps
+                # Start evaluating positions for gaps
                 if len(player.positions) > 1:
                     self.position_range_adder(player.positions)
+                
+            # Particle movement
+            for particle in self.particles:
+                particle.move()   
          
-            # Start evaluating positions for gaps
+            # Collision detection
             self.is_collision(self.players[1], self.players[0])
             self.is_collision(self.players[0], self.players[1])
 
             # If a player crashes
             for player in self.players:
                 if player.status == player.CRASHED:
-                    self.reset()
                     if os.name == 'posix':
                         os.system('afplay sounds/explosion.wav&')
+                    self.reset()
                     self.draw_score()
         
             if self.is_game_over():
@@ -296,7 +296,7 @@ class Game(object):
 
         # Game ends
         self.display_winner(self.players[0], self.players[1])
-        # time.sleep(3)
+        time.sleep(2)
         self.screen.clear()
         if os.name == 'posix':
             os.system('killall afplay')
@@ -352,18 +352,16 @@ class Player(turtle.Turtle):
         """Removes light cycle from screen"""
         self.penup()
         self.clear()
-        self.respawn()
 
-    def respawn(self):
+    def respawn(self, x, y):
         """Respawns light cycle to default location, resets speed to 1, and
         resets the position list."""
         self.status = self.READY
-        self.setposition(self.start_x, self.start_y)
+        self.setposition(x, y)
         self.setheading(random.randrange(0, 360, 90))
         self.fd_speed = 1
         self.pendown()
         self.positions = []
-
 
 class Particle(turtle.Turtle):
     """This class is only used to create particle effects when there is a crash."""
