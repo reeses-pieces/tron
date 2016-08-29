@@ -256,18 +256,10 @@ class Game(object):
             # Activate key mappings
             turtle.listen()
 
-            # Set players into motion, boundary check,
+            # Set players into motion, boundary check, add converted coords to positions
             for player in self.players:
                 player.forward(player.fd_speed)
                 self.boundary_check(player)
-                
-
-            # Particle movement
-            for particle in self.particles:
-                particle.move()
-
-            # Coercing coordinates and appending to list
-            for player in self.players:
                 player.convert_coord_to_int()
                 player.positions.append(player.coord)
                 # FINDING DUPLICATE POSITIONS!!
@@ -275,20 +267,24 @@ class Game(object):
                 #     for position in player.positions:
                 #         if player.positions.count(position) > 1:
                 #             print('Found duplicate', position)
-            # Start evaluating positions for gaps
+                # Start evaluating positions for gaps
                 if len(player.positions) > 1:
                     self.position_range_adder(player.positions)
+                
+            # Particle movement
+            for particle in self.particles:
+                particle.move()   
          
-            # Start evaluating positions for gaps
+            # Collision detection
             self.is_collision(self.players[1], self.players[0])
             self.is_collision(self.players[0], self.players[1])
 
             # If a player crashes
             for player in self.players:
                 if player.status == player.CRASHED:
-                    self.reset()
                     if os.name == 'posix':
                         os.system('afplay sounds/explosion.wav&')
+                    self.reset()
                     self.draw_score()
         
             if self.is_game_over():
