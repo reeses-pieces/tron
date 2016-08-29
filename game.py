@@ -79,14 +79,12 @@ class Game(object):
         y = random.randint(-(self.height / 2) + 100, (self.height / 2) - 100)
         return (x, y)
 
-    def boundary_check(self, player):
+    def is_outside_boundary(self, player):
         """Checks if light cycle is out of bounds using border coord.
         Deviation of 3 on edge to cosmetically match impact."""
         if ((player.xcor() < (-self.x_boundary + 3)) or (player.xcor() > (self.x_boundary - 3)) or
             (player.ycor() < (-self.y_boundary + 3)) or (player.ycor() > (self.y_boundary - 3))):
-                self.particles_explode(player)
-                player.lives -= 1
-                player.status = player.CRASHED
+                return True
 
     def position_range_adder(self, player_positions):
         """If speed is > 1, the positions aren't recorded between the speed gap. Therefore,
@@ -228,7 +226,7 @@ class Game(object):
     def reset(self):
         for player in self.players:
             x, y = self.random_coord()
-            player.crash()
+            player.clear_lightcycle()
             player.respawn(x, y)
 
     def start_game(self):
@@ -263,15 +261,13 @@ class Game(object):
             # Set players into motion, boundary check, add converted coords to positions
             for player in self.players:
                 player.forward(player.fd_speed)
-                self.boundary_check(player)
                 player.convert_coord_to_int()
                 player.positions.append(player.coord)
-                # FINDING DUPLICATE POSITIONS!!
-                # if player.name == 'P1':
-                #     for position in player.positions:
-                #         if player.positions.count(position) > 1:
-                #             print('Found duplicate', position)
-                # Start evaluating positions for gaps
+
+                if self.is_outside_boundary(player):
+                    self.particles_explode(player)
+                    player.lose_life()
+                # Add missing positions to bridge position gaps
                 if len(player.positions) > 1:
                     self.position_range_adder(player.positions)
                 
@@ -348,10 +344,15 @@ class Player(turtle.Turtle):
         y = int(y)
         self.coord = (x, y)
 
-    def crash(self):
+    def clear_lightcycle(self):
         """Removes light cycle from screen"""
         self.penup()
         self.clear()
+
+    def lose_life(self):
+        """Takes away one life from player"""
+        self.lives -= 1
+        self.status = self.CRASHED
 
     def respawn(self, x, y):
         """Respawns light cycle to default location, resets speed to 1, and
