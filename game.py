@@ -109,16 +109,18 @@ class Game(object):
                 if position not in player_positions:
                     player_positions.append(position)
 
-    def create_player(self):
+    def create_player(self, number=2):
         """Two players are always created. P1 is blue.
         P2 is Yellow"""
-        # Create player 1
-        self.P1 = Player('P1', -100, 100)
-        self.P1.color('#40BBE3')
 
-        # Create player 2
-        self.P2 = Player('P2', 100, -100)
-        self.P2.color('#E3E329')
+        self.players = []
+        colors = ['#40BBE3','#E3E329']
+        
+        for i in range(number):
+            random_x = random.randint(-(self.width / 2) + 100, (self.width / 2) - 100 )
+            random_y = random.randint(-(self.height / 2) + 100, (self.height / 2) - 100 )
+            self.players.append(Player('P' + str(i + 1), random_x, random_y))
+            self.players[i].color(colors[i])
 
     def create_particles(self):
         """Creates particles list. All particles act in same manner."""
@@ -148,38 +150,38 @@ class Game(object):
     def set_relative_keyboard_bindings(self):
         """Maps relative controls to player movement."""
         # Set P1 keyboard bindings
-        turtle.onkeypress(self.P1.turn_left, 'a')
-        turtle.onkeypress(self.P1.turn_right, 'd')
-        turtle.onkeypress(self.P1.accelerate, 'w')
-        turtle.onkeypress(self.P1.decelerate, 's')
+        turtle.onkeypress(self.players[0].turn_left, 'a')
+        turtle.onkeypress(self.players[0].turn_right, 'd')
+        turtle.onkeypress(self.players[0].accelerate, 'w')
+        turtle.onkeypress(self.players[0].decelerate, 's')
 
         # Set P2 keyboard bindings
-        turtle.onkeypress(self.P2.turn_left, 'Left')
-        turtle.onkeypress(self.P2.turn_right, 'Right')
-        turtle.onkeypress(self.P2.accelerate, 'Up')
-        turtle.onkeypress(self.P2.decelerate, 'Down')
+        turtle.onkeypress(self.players[1].turn_left, 'Left')
+        turtle.onkeypress(self.players[1].turn_right, 'Right')
+        turtle.onkeypress(self.players[1].accelerate, 'Up')
+        turtle.onkeypress(self.players[1].decelerate, 'Down')
 
     def set_abs_keyboard_bindings(self):
         """Maps absolute controls to player movement."""
         
         # Set P1 keyboard bindings
-        if self.P1.heading() == 0: # East
-            self.abs_key_mapper(self.P1, 'w', 's', 'd', 'a')
-        elif self.P1.heading() == 90: # North
-            self.abs_key_mapper(self.P1, 'a', 'd', 'w', 's')
-        elif self.P1.heading() == 180: # West
-            self.abs_key_mapper(self.P1, 's', 'w', 'a', 'd')
-        elif self.P1.heading() == 270: # South
-            self.abs_key_mapper(self.P1, 'd', 'a', 's', 'w')
+        if self.players[0].heading() == 0: # East
+            self.abs_key_mapper(self.players[0], 'w', 's', 'd', 'a')
+        elif self.players[0].heading() == 90: # North
+            self.abs_key_mapper(self.players[0], 'a', 'd', 'w', 's')
+        elif self.players[0].heading() == 180: # West
+            self.abs_key_mapper(self.players[0], 's', 'w', 'a', 'd')
+        elif self.players[0].heading() == 270: # South
+            self.abs_key_mapper(self.players[0], 'd', 'a', 's', 'w')
         # Set P2 keyboard bindings
-        if self.P2.heading() == 0: # East
-            self.abs_key_mapper(self.P2, 'Up', 'Down', 'Right', 'Left')
-        elif self.P2.heading() == 90: # North
-            self.abs_key_mapper(self.P2, 'Left', 'Right', 'Up', 'Down')
-        elif self.P2.heading() == 180: # West
-            self.abs_key_mapper(self.P2, 'Down', 'Up', 'Left', 'Right')
-        elif self.P2.heading() == 270: # South
-            self.abs_key_mapper(self.P2, 'Right', 'Left', 'Down', 'Up')            
+        if self.players[1].heading() == 0: # East
+            self.abs_key_mapper(self.players[1], 'Up', 'Down', 'Right', 'Left')
+        elif self.players[1].heading() == 90: # North
+            self.abs_key_mapper(self.players[1], 'Left', 'Right', 'Up', 'Down')
+        elif self.players[1].heading() == 180: # West
+            self.abs_key_mapper(self.players[1], 'Down', 'Up', 'Left', 'Right')
+        elif self.players[1].heading() == 270: # South
+            self.abs_key_mapper(self.players[1], 'Right', 'Left', 'Down', 'Up')            
 
     def abs_key_mapper(self, player, left, right, accel, decel):
         turtle.onkeypress(player.turn_left, left)
@@ -195,8 +197,8 @@ class Game(object):
         self.score_pen.setposition((self.width / -2) + 75, (self.height / 2) - 40)
         self.score_pen.pendown()
         self.score_pen.color('white')
-        p1lives = 'P1: %s' % (self.P1.lives * '*')
-        p2lives = 'P2: %s' % (self.P2.lives * '*')
+        p1lives = 'P1: %s' % (self.players[0].lives * '*')
+        p2lives = 'P2: %s' % (self.players[1].lives * '*')
         self.score_pen.write(p1lives, font=("Verdana", 18, "bold"))
         self.score_pen.penup()
         self.score_pen.hideturtle()
@@ -207,7 +209,7 @@ class Game(object):
         self.score_pen.hideturtle()
 
     def is_game_over(self):
-        if self.P1.lives == 0 or self.P2.lives == 0:
+        if self.players[0].lives == 0 or self.players[1].lives == 0:
             return True
 
     def display_winner(self, player, other):
@@ -219,6 +221,10 @@ class Game(object):
         else:
             winner = other.name
         self.score_pen.write(winner + ' wins!', align='center', font=("Verdana", 36, "bold"))
+
+    def reset(self):
+        for player in self.players:
+            player.crash()
 
     def start_game(self):
         """All players are set into motion, boundary checks, and collision checks
@@ -249,45 +255,45 @@ class Game(object):
             # Activate key mappings
             turtle.listen()
 
-            # Set players into motion
-            self.P1.forward(self.P1.fd_speed)
-            self.P2.forward(self.P2.fd_speed)
+            # Set players into motion, boundary check,
+            for player in self.players:
+                player.forward(player.fd_speed)
+                self.boundary_check(player)
+                
 
             # Particle movement
             for particle in self.particles:
                 particle.move()
 
-            # Player boundary checks
-            self.boundary_check(self.P1)
-            self.boundary_check(self.P2)
-
             # Coercing coordinates and appending to list
-            self.P1.convert_coord_to_int()
-            self.P1.positions.append(self.P1.coord)
+            for player in self.players:
+                # player.convert_coord_to_int()
+                player.positions.append(player.pos())
             # Start evaluating positions for gaps
-            if len(self.P1.positions) > 2:
-                self.position_range_adder(self.P1.positions)
-                self.is_collision(self.P1, self.P2)
+                if len(player.positions) > 2:
+                    self.position_range_adder(player.positions)
+                    
 
-            self.P2.convert_coord_to_int()
-            self.P2.positions.append(self.P2.coord)
+            # self.players[1].convert_coord_to_int()
+            # self.players[1].positions.append(self.players[1].coord)
             # Start evaluating positions for gaps
-            if len(self.P2.positions) > 2:
-                self.position_range_adder(self.P2.positions)
-                self.is_collision(self.P2, self.P1)
+            self.is_collision(self.players[1], self.players[0])
+            self.is_collision(self.players[0], self.players[1])
 
-            if self.P1.status == self.P1.CRASHED or self.P2.status == self.P2.CRASHED:
-                self.P1.reset_players(self.P2)
-                if os.name == 'posix':
-                    os.system('afplay sounds/explosion.wav&')
-                self.draw_score()
-
+            # If a player crashes
+            for player in self.players:
+                if player.status == player.CRASHED:
+                    self.reset()
+                    if os.name == 'posix':
+                        os.system('afplay sounds/explosion.wav&')
+                    self.draw_score()
+        
             if self.is_game_over():
                 self.game_on = False
 
         # Game ends
-        self.display_winner(self.P1, self.P2)
-        time.sleep(3)
+        self.display_winner(self.players[0], self.players[1])
+        # time.sleep(3)
         self.screen.clear()
         if os.name == 'posix':
             os.system('killall afplay')
@@ -354,11 +360,6 @@ class Player(turtle.Turtle):
         self.fd_speed = 1
         self.pendown()
         self.positions = []
-
-    def reset_players(self, other):
-        """Resets both players"""
-        self.crash()
-        other.crash()
 
 
 class Particle(turtle.Turtle):
