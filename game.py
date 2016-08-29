@@ -97,7 +97,7 @@ class Game(object):
                 coord = (x_position, prev_y_pos)
                 positions_range.append(coord)
         # Y coord are changing and the difference between them is greater than 1
-        if abs(prev_y_pos - next_y_pos) > 1:
+        elif abs(prev_y_pos - next_y_pos) > 1:
             start = min(prev_y_pos, next_y_pos) + 1
             end = max(prev_y_pos, next_y_pos)
             for y_position in range(start, end):
@@ -111,14 +111,14 @@ class Game(object):
 
     def create_player(self, number=2):
         """Two players are always created. P1 is blue.
-        P2 is Yellow"""
+        P2 is Yellow, P3 is Red, P4 is Green"""
 
         self.players = []
-        colors = ['#40BBE3','#E3E329']
+        colors = ['#40BBE3','#E3E329', '#ff0000', '#33cc33']
         
         for i in range(number):
-            random_x = random.randint(-(self.width / 2) + 100, (self.width / 2) - 100 )
-            random_y = random.randint(-(self.height / 2) + 100, (self.height / 2) - 100 )
+            random_x = random.randint(-(self.width / 2) + 100, (self.width / 2) - 100)
+            random_y = random.randint(-(self.height / 2) + 100, (self.height / 2) - 100)
             self.players.append(Player('P' + str(i + 1), random_x, random_y))
             self.players[i].color(colors[i])
 
@@ -138,10 +138,10 @@ class Game(object):
     def is_collision(self, player, other):
         """Collision check. Self and with other player."""
         # Player collides into own trail (suicide) or into opponenet
-        if player.pos() in player.positions[:-6] or player.pos() in other.positions:
+        # if player.coord in player.positions[:-6] or player.coord() in other.positions:
 
-        # for position in player.positions[-3:]: # 3 positions to cover speed gap (0 - 2)
-        #     if position in player.positions[:-3] or position in other.positions:
+        for position in player.positions[-3:]: # 3 positions to cover speed gap (0 - 2)
+            if position in player.positions[:-6] or position in other.positions:
                 player.lives -= 1
                 # Particle explosion
                 self.particles_explode(player)
@@ -209,8 +209,9 @@ class Game(object):
         self.score_pen.hideturtle()
 
     def is_game_over(self):
-        if self.players[0].lives == 0 or self.players[1].lives == 0:
-            return True
+        for player in self.players:
+            if player.lives == 0:
+                return True
 
     def display_winner(self, player, other):
         """Once game loop finishes, this runs to display the winner."""
@@ -267,15 +268,17 @@ class Game(object):
 
             # Coercing coordinates and appending to list
             for player in self.players:
-                # player.convert_coord_to_int()
-                player.positions.append(player.pos())
+                player.convert_coord_to_int()
+                player.positions.append(player.coord)
+                # FINDING DUPLICATE POSITIONS!!
+                # if player.name == 'P1':
+                #     for position in player.positions:
+                #         if player.positions.count(position) > 1:
+                #             print('Found duplicate', position)
             # Start evaluating positions for gaps
-                if len(player.positions) > 2:
+                if len(player.positions) > 1:
                     self.position_range_adder(player.positions)
-                    
-
-            # self.players[1].convert_coord_to_int()
-            # self.players[1].positions.append(self.players[1].coord)
+         
             # Start evaluating positions for gaps
             self.is_collision(self.players[1], self.players[0])
             self.is_collision(self.players[0], self.players[1])
