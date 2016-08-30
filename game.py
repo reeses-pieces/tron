@@ -86,11 +86,11 @@ class Game(object):
             (player.ycor() < (-self.y_boundary + 3)) or (player.ycor() > (self.y_boundary - 3))):
                 return True
 
-    def position_range_adder(self, player_positions):
+    def position_range_adder(self, player):
         """If speed is > 1, the positions aren't recorded between the speed gap. Therefore,
         this function is needed to fill in the gaps and append the missing positions"""
-        prev_x_pos, prev_y_pos = player_positions[-2] # tuple unpacking
-        next_x_pos, next_y_pos = player_positions[-1]
+        prev_x_pos, prev_y_pos = player.positions[-2] # tuple unpacking
+        next_x_pos, next_y_pos = player.positions[-1]
         positions_range = []
         # X coord are changing and the difference between them is greater than 1
         if abs(prev_x_pos - next_x_pos) > 1:
@@ -109,8 +109,8 @@ class Game(object):
         # Unique coordinates to add
         if positions_range:
             for position in positions_range:
-                if position not in player_positions:
-                    player_positions.append(position)
+                if position not in player.positions:
+                    player.positions.append(position)
 
     def create_player(self, number=2):
         """Two players are always created. P1 is blue.
@@ -139,8 +139,8 @@ class Game(object):
 
     def is_collision_with_enemy(self, player):
         """Collision check with other player."""
-        # Get the current position, iterate through the positions list, and check if
-        # position is in list
+        # Get the current position, iterate through the positions list, and don't check its own
+        # positions, check if position is in list
         for i in range(len(self.players)):
             for position in player.positions[-5:]:
                 if position in self.players[i].positions and player.name != self.players[i].name:
@@ -246,6 +246,7 @@ class Game(object):
         self.game_on = True
         # Start bgm
         if os.name == 'posix':
+            os.system('killall afplay')
             os.system('afplay sounds/son_of_flynn.m4a&')
             os.system('say grid is live!')
 
@@ -260,9 +261,8 @@ class Game(object):
 
             # Activate key mappings
             turtle.listen()
-
             # Set players into motion, boundary check, add converted coords to positions, and
-            # collision detection
+            # detect collisions
             for player in self.players:
                 player.forward(player.fd_speed)
                 player.convert_coord_to_int()
@@ -270,12 +270,11 @@ class Game(object):
 
                 if self.is_outside_boundary(player) or self.is_collision_with_enemy(player) or \
                 self.is_collision_with_self(player):
-                    
                     player.lose_life()
                 # Add missing positions to bridge position gaps
                 if len(player.positions) > 1:
-                    self.position_range_adder(player.positions)
-                
+                    self.position_range_adder(player)
+
             # Particle movement
             for particle in self.particles:
                 particle.move()
@@ -357,7 +356,7 @@ class Player(turtle.Turtle):
         self.status = self.CRASHED
 
     def respawn(self, x, y):
-        """Respawns light cycle to default location, resets speed to 1, and
+        """Respawns light cycle to random coord passed as args, resets speed to 1, and
         resets the position list."""
         self.status = self.READY
         self.setposition(x, y)
