@@ -137,15 +137,19 @@ class Game(object):
             particle.change_color(player)
             particle.explode(player.xcor(), player.ycor())
 
-    def is_collision(self, player, other):
-        """Collision check. Self and with other player."""
-        # Player collides into own trail (suicide) or into opponenet
-        for position in player.positions[-3:]: # 3 positions to cover speed gap (0 - 2)
-            if position in player.positions[:-3] or position in other.positions:
-                player.lives -= 1
-                # Particle explosion
-                self.particles_explode(player)
-                player.status = player.CRASHED
+    def is_collision_with_enemy(self, player):
+        """Collision check with other player."""
+        # Get the current position, iterate through the positions list, and check if
+        # position is in list
+        for i in range(len(self.players)):
+            for position in player.positions[-5:]:
+                if position in self.players[i].positions and player.name != self.players[i].name:
+                    return True
+
+    def is_collision_with_self(self, player):
+        for position in player.positions[-5:]: # Multiple positions to cover speed gap (0 - 3)
+            if position in player.positions[:-5]:
+                return True
 
     def set_relative_keyboard_bindings(self):
         """Maps relative controls to player movement."""
@@ -213,14 +217,13 @@ class Game(object):
             if player.lives == 0:
                 return True
 
-    def display_winner(self, player, other):
+    def display_winner(self,):
         """Once game loop finishes, this runs to display the winner."""
         self.score_pen.setposition(0, 0)
         self.score_pen.pendown()
-        if player.lives > 0:
-            winner = player.name
-        else:
-            winner = other.name
+        for player in self.players:
+            if player.lives > 0:
+                winner = player.name
         self.score_pen.write(winner + ' wins!', align='center', font=("Verdana", 36, "bold"))
 
     def reset(self):
@@ -258,14 +261,16 @@ class Game(object):
             # Activate key mappings
             turtle.listen()
 
-            # Set players into motion, boundary check, add converted coords to positions
+            # Set players into motion, boundary check, add converted coords to positions, and
+            # collision detection
             for player in self.players:
                 player.forward(player.fd_speed)
                 player.convert_coord_to_int()
                 player.positions.append(player.coord)
 
-                if self.is_outside_boundary(player):
-                    self.particles_explode(player)
+                if self.is_outside_boundary(player) or self.is_collision_with_enemy(player) or \
+                self.is_collision_with_self(player):
+                    
                     player.lose_life()
                 # Add missing positions to bridge position gaps
                 if len(player.positions) > 1:
@@ -273,15 +278,12 @@ class Game(object):
                 
             # Particle movement
             for particle in self.particles:
-                particle.move()   
-         
-            # Collision detection
-            self.is_collision(self.players[1], self.players[0])
-            self.is_collision(self.players[0], self.players[1])
+                particle.move()
 
             # If a player crashes
             for player in self.players:
                 if player.status == player.CRASHED:
+                    self.particles_explode(player)
                     if os.name == 'posix':
                         os.system('afplay sounds/explosion.wav&')
                     self.reset()
@@ -291,7 +293,7 @@ class Game(object):
                 self.game_on = False
 
         # Game ends
-        self.display_winner(self.players[0], self.players[1])
+        self.display_winner()
         time.sleep(2)
         self.screen.clear()
         if os.name == 'posix':
@@ -326,8 +328,8 @@ class Player(turtle.Turtle):
         self.right(90)
 
     def accelerate(self):
-        """Min. speed = 1, Max. speed = 2."""
-        if self.fd_speed < 2:
+        """Min. speed = 1, Max. speed = 3."""
+        if self.fd_speed < 3:
             self.fd_speed += 1
             self.forward(self.fd_speed) # Needs to be run only if speed changes
 
