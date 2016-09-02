@@ -199,7 +199,6 @@ class Game(object):
         turtle.onkeypress(player.accelerate, accel)
         turtle.onkeypress(player.decelerate, decel)
 
-
     def draw_score(self):
         """Using a turtle, this draws the score on the screen once, then clears once
         the score changes. Start position is upper left corner."""
@@ -238,6 +237,12 @@ class Game(object):
             player.clear_lightcycle()
             player.respawn(x, y)
 
+    def start_bgm(self):
+        if os.name == 'posix':
+            os.system('killall afplay')
+            os.system('afplay sounds/son_of_flynn.m4a&')
+            os.system('say grid is live!')
+
     def start_game(self):
         """All players are set into motion, boundary checks, and collision checks
         run continuously until a player runs out of lives."""
@@ -250,12 +255,8 @@ class Game(object):
         self.score_pen = turtle.Turtle()
         self.draw_score()
         self.game_on = True
-        # Start bgm
-        if os.name == 'posix':
-            os.system('killall afplay')
-            os.system('afplay sounds/son_of_flynn.m4a&')
-            os.system('say grid is live!')
-
+        self.start_bgm()
+         
         while self.game_on:
             # Updates screen only when loop is complete
             turtle.update()
@@ -267,13 +268,13 @@ class Game(object):
 
             # Activate key mappings
             turtle.listen()
-            # Set players into motion, boundary check, add converted coords to positions, and
-            # detect collisions
+            # Set players into motion and add converted coords to positions
             for player in self.players:
                 player.forward(player.fd_speed)
                 player.convert_coord_to_int()
                 player.positions.append(player.coord)
 
+                # Detect collision with boundary, self, or enemy
                 if self.is_outside_boundary(player) or self.is_collision_with_enemy(player) or \
                 self.is_collision_with_self(player):
                     player.lose_life()
