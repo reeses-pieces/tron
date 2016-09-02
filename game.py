@@ -313,16 +313,14 @@ class Human(turtle.Turtle):
     READY = 'ready'
 
     def __init__(self, name, start_x, start_y):
-        super(Human, self).__init__()
+        super().__init__()
         self.name = name
         self.speed(0)
         self.fd_speed = 1
         self.pensize(2)
-        self.start_x = start_x
-        self.start_y = start_y
         self.setposition(start_x, start_y)
         self.positions = []
-        self.coord = (self.start_x, self.start_y)
+        self.coord = (start_x, start_y)
         self.lives = 5
         self.status = self.READY
 
@@ -377,6 +375,7 @@ class Human(turtle.Turtle):
 class Bot(Human):
 
     def __init__(self, name, start_x, start_y):
+        super().__init__()
         Human.__init__(self, name, start_x, start_y)
 
 class Particle(turtle.Turtle):
