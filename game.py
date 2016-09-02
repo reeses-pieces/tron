@@ -83,8 +83,9 @@ class Game(object):
     def is_outside_boundary(self, player):
         """Checks if light cycle is out of bounds using border coord.
         Deviation of 3 on edge to cosmetically match impact."""
-        if abs(player.xcor()) > abs(self.x_boundary) - 3 or abs(player.ycor()) > abs(self.y_boundary) - 3:
-                return True
+        if (abs(player.xcor()) > abs(self.x_boundary) - 3 or 
+            abs(player.ycor()) > abs(self.y_boundary) - 3):
+            return True
 
     def position_range_adder(self, player):
         """If speed is > 1, the positions aren't recorded between the speed gap. Therefore,
@@ -116,6 +117,9 @@ class Game(object):
         """Two players are always created. P1 is blue.
         P2 is Yellow, P3 is Red, P4 is Green"""
 
+        if number > 4:
+            raise ValueError("No more than 4 players allowed.")
+
         self.players = []
         colors = ['#40BBE3','#E3E329', '#ff0000', '#33cc33']
         
@@ -142,13 +146,14 @@ class Game(object):
         # Get the current position, iterate through the positions list, and don't check its own
         # positions, check if position is in list
         for i in range(len(self.players)):
-            for position in player.positions[-5:]:
-                if position in self.players[i].positions and player.name != self.players[i].name:
-                    return True
+            if player.name != self.players[i].name:
+                for position in player.positions[-5:]:
+                    if position in self.players[i].positions:
+                        return True
 
     def is_collision_with_self(self, player):
-        for position in player.positions[-5:]: # Multiple positions to cover speed gap (0 - 3)
-            if position in player.positions[:-5]:
+        for position in player.positions[-10:]: # Multiple positions to cover speed gap (0 - 3)
+            if position in player.positions[:-10]:
                 return True
 
     def set_relative_keyboard_bindings(self):
