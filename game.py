@@ -75,15 +75,15 @@ class Game(object):
         self.pen.hideturtle()
 
     def random_coord(self):
-        x = random.randint(-(self.width / 2) + 100, (self.width / 2) - 100)
-        y = random.randint(-(self.height / 2) + 100, (self.height / 2) - 100)
+        """Generates random coordinate within playable area with 50 px padding from boundary"""
+        x = random.randint(-(self.x_boundary - 50), (self.x_boundary - 50))
+        y = random.randint(-(self.y_boundary - 50), (self.y_boundary - 50))
         return (x, y)
 
     def is_outside_boundary(self, player):
         """Checks if light cycle is out of bounds using border coord.
         Deviation of 3 on edge to cosmetically match impact."""
-        if ((player.xcor() < (-self.x_boundary + 3)) or (player.xcor() > (self.x_boundary - 3)) or
-            (player.ycor() < (-self.y_boundary + 3)) or (player.ycor() > (self.y_boundary - 3))):
+        if abs(player.xcor()) > abs(self.x_boundary) - 3 or abs(player.ycor()) > abs(self.y_boundary) - 3:
                 return True
 
     def position_range_adder(self, player):
@@ -188,6 +188,7 @@ class Game(object):
             self.abs_key_mapper(self.players[1], 'Right', 'Left', 'Down', 'Up')            
 
     def abs_key_mapper(self, player, left, right, accel, decel):
+        """Maps passed in args to player controls"""
         turtle.onkeypress(player.turn_left, left)
         turtle.onkeypress(player.turn_right, right)
         turtle.onkeypress(player.accelerate, accel)
@@ -279,7 +280,7 @@ class Game(object):
             for particle in self.particles:
                 particle.move()
 
-            # If a player crashes
+            # If a player crashes, particles explode and reset lightcycles
             for player in self.players:
                 if player.status == player.CRASHED:
                     self.particles_explode(player)
