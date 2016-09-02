@@ -113,7 +113,7 @@ class Game(object):
                 if position not in player.positions:
                     player.positions.append(position)
 
-    def create_player(self, number=2):
+    def create_player(self, number=1):
         """Two players are always created. P1 is blue.
         P2 is Yellow, P3 is Red, P4 is Green"""
 
@@ -125,7 +125,8 @@ class Game(object):
         
         for i in range(number):
             x, y = self.random_coord()
-            self.players.append(Player('P' + str(i + 1), x, y))
+            self.players.append(Human('P' + str(i + 1), x, y))
+            self.players.append(Bot('B' + str(i + 1), x, y))
             self.players[i].color(colors[i])
 
     def create_particles(self):
@@ -306,13 +307,13 @@ class Game(object):
             os.system('killall afplay')
 
 
-class Player(turtle.Turtle):
+class Human(turtle.Turtle):
 
     CRASHED = 'crashed'
     READY = 'ready'
 
     def __init__(self, name, start_x, start_y):
-        super(Player, self).__init__()
+        super(Human, self).__init__()
         self.name = name
         self.speed(0)
         self.fd_speed = 1
@@ -371,6 +372,12 @@ class Player(turtle.Turtle):
         self.fd_speed = 1
         self.pendown()
         self.positions = []
+
+
+class Bot(Human):
+
+    def __init__(self, name, start_x, start_y):
+        Human.__init__(self, name, start_x, start_y)
 
 class Particle(turtle.Turtle):
     """This class is only used to create particle effects when there is a crash."""
