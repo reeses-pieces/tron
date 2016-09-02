@@ -113,20 +113,24 @@ class Game(object):
                 if position not in player.positions:
                     player.positions.append(position)
 
-    def create_player(self, number=1):
+    def create_player(self, number=2):
         """Two players are always created. P1 is blue.
         P2 is Yellow, P3 is Red, P4 is Green"""
 
-        if number > 4:
+        if number > 2:
             raise ValueError("No more than 4 players allowed.")
 
         self.players = []
         colors = ['#40BBE3','#E3E329', '#ff0000', '#33cc33']
         
+        # Create bot for every human
         for i in range(number):
             x, y = self.random_coord()
             self.players.append(Human('P' + str(i + 1), x, y))
             self.players.append(Bot('B' + str(i + 1), x, y))
+        
+        # Assign colors
+        for i in range(len(self.players)):
             self.players[i].color(colors[i])
 
     def create_particles(self):
@@ -375,7 +379,6 @@ class Human(turtle.Turtle):
 class Bot(Human):
 
     def __init__(self, name, start_x, start_y):
-        super().__init__()
         Human.__init__(self, name, start_x, start_y)
 
 class Particle(turtle.Turtle):
