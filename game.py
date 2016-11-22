@@ -45,7 +45,7 @@ class Game(object):
         self.screen = turtle.Screen()
         self.screen.bgcolor('black')
         self.screen.setup(self.width, self.height, startx=None, starty=None)
-        self.screen.title('TRON')
+        self.screen.title('TURTLETRON')
         self.screen.tracer(0)
 
     def draw_border(self):
