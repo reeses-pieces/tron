@@ -1,4 +1,4 @@
-# Turtle Tron
+# TurtleTron
 
 ![main menu](images/screenshots/main_menu.png?raw=true =800x600 "Main Menu")
 ![gameplay](images/screenshots/gameplay.png?raw=true =800x600 "Gameplay")
