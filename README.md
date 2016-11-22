@@ -7,7 +7,7 @@ The object of the game is to stay alive the longest by not crashing into the wal
 
 ## Motivation
 
-Learning to code + nostalgia = Winning combination
+Learning to code + nostalgia = a winning combination
 
 ## Installation
 
