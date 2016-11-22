@@ -13,7 +13,7 @@ class MainMenu(object):
     current_screen = 'main'
     game_on = False
     relative_controls = False
-
+    
     def __init__(self):
         self.keyboard_bindings()
 
@@ -25,7 +25,7 @@ class MainMenu(object):
         self.screen.bgcolor('black')
         self.screen.bgpic('images/main_menu.gif')
         self.screen.setup(self.width, self.height, startx=None, starty=None)
-        self.screen.title('TRON')
+        self.screen.title('TURTLETRON')
         self.screen.tracer(0)
 
     def set_cursor_master(self):

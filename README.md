@@ -1,7 +1,7 @@
 # Turtle Tron
 
-![main menu](https://github.com/reeses-pieces/tron/images/main_menu.gif "Main Menu")
-![gameplay](https://github.com/reeses-pieces/tron/images/screenshots/gameplay.png "Gameplay")
+![main menu](images/screenshots/main_menu.png =800x600)
+![gameplay](images/screenshots/gameplay.png =800x600 "Gameplay")
 
 ## Synopsis
 
