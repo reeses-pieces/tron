@@ -1,7 +1,7 @@
 # Turtle Tron
 
-![main menu](images/screenshots/main_menu.png =800x600)
-![gameplay](images/screenshots/gameplay.png =800x600 "Gameplay")
+![main menu](images/screenshots/main_menu.png?raw=true =800x600 "Main Menu")
+![gameplay](images/screenshots/gameplay.png?raw=true =800x600 "Gameplay")
 
 ## Synopsis
 
