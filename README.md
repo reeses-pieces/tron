@@ -1,5 +1,8 @@
 # Turtle Tron
 
+![main menu](images/screenshots/main_menu.png =800x600)
+![gameplay](images/screenshots/gameplay.png =800x600 "Gameplay")
+
 ## Synopsis
 
 This game is a homage to the 1982 cult classic, Tron. It recreates the light cycle matches that are played out during the movie. It currently supports 2 players.
@@ -7,7 +10,7 @@ The object of the game is to stay alive the longest by not crashing into the wal
 
 ## Motivation
 
-Learning to code + nostalgia = Winning combination
+Learning to code + nostalgia = a winning combination
 
 ## Installation
 
