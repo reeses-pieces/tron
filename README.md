@@ -1,5 +1,8 @@
 # Turtle Tron
 
+![main menu](https://github.com/reeses-pieces/tron/images/main_menu.gif "Main Menu")
+![gameplay](https://github.com/reeses-pieces/tron/images/screenshots/gameplay.png "Gameplay")
+
 ## Synopsis
 
 This game is a homage to the 1982 cult classic, Tron. It recreates the light cycle matches that are played out during the movie. It currently supports 2 players.
