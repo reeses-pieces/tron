@@ -10,11 +10,11 @@ class MainMenu(object):
     change the grid size, start the game, and quit the game.
     """
 
-    current_screen = 'main'
     game_on = False
-    relative_controls = False
     
     def __init__(self):
+        self.current_screen = 'main'
+        self.relative_controls = False
         self.keyboard_bindings()
 
     def create_screen(self):
@@ -38,17 +38,15 @@ class MainMenu(object):
             self.set_cursor_grid_size()
         elif self.current_screen == 'controls':
             self.set_cursor_controls()
-        else:
-            pass
 
     def set_cursor_main(self):
         """Main: Start = 3, Controls = 2, Quit = 1"""
         if self.pen.cursor_pos == 1:
-            self.pen.setposition(-50, -130)
+            self.pen.setposition(-48, -128)
         elif self.pen.cursor_pos == 2:
-            self.pen.setposition(-80, -17)
+            self.pen.setposition(-80, -14)
         else: # Position 3
-            self.pen.setposition(-50, 95)
+            self.pen.setposition(-50, 98)
 
     def set_cursor_controls(self):
         """Controls: Relative = 1, Absolute = 2."""

@@ -5,10 +5,6 @@ import random
 import time
 import os
 
-# Welcome to Turtle TRON! The object of the game is to stay alive the longest by not crashing into the walls
-# the opponent's trails, or the boundaries. Game resets when either player crashes.
-# Options: Grid size
-
 # Currently set to absolute key bindings.
 
 class Game(object):
@@ -16,6 +12,7 @@ class Game(object):
     runs game loop."""
 
     game_on = False
+    # relative_controls = False
 
     def __init__(self, width=None, height=None, relative_controls=False):
         self.width = width
