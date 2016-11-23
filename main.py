@@ -44,11 +44,11 @@ class MainMenu(object):
     def set_cursor_main(self):
         """Main: Start = 3, Controls = 2, Quit = 1"""
         if self.pen.cursor_pos == 1:
-            self.pen.setposition(-50, -130)
+            self.pen.setposition(-48, -128)
         elif self.pen.cursor_pos == 2:
-            self.pen.setposition(-80, -17)
+            self.pen.setposition(-80, -14)
         else: # Position 3
-            self.pen.setposition(-50, 95)
+            self.pen.setposition(-50, 98)
 
     def set_cursor_controls(self):
         """Controls: Relative = 1, Absolute = 2."""
