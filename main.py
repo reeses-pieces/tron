@@ -14,6 +14,7 @@ class MainMenu(object):
     
     def __init__(self):
         self.current_screen = 'main'
+        self.relative_controls = False
         self.keyboard_bindings()
 
     def create_screen(self):
