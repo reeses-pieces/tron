@@ -19,10 +19,10 @@ Python 3 is required! No other external modules are needed.
 ```bash
 
 # Clone the repo
-git clone https://github.com/reeses-pieces/tron.git
+$ git clone https://github.com/reeses-pieces/tron.git
 
 # Run main.py to start.
-python3 main.py
+$ python3 main.py
 
 ```
 
