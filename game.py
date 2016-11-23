@@ -12,7 +12,7 @@ class Game(object):
     runs game loop."""
 
     game_on = False
-    relative_controls = False
+    # relative_controls = False
 
     def __init__(self, width=None, height=None, relative_controls=False):
         self.width = width
