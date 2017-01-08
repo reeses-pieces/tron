@@ -243,13 +243,12 @@ class Game(object):
             os.system('say grid is live!')
 
     def create_pens(self):
+        """Self.pen is for the border and self.score_pen is naturally,for the score
+        and winner."""
         self.pen = turtle.Turtle()
         self.score_pen = turtle.Turtle()
-        
-    def start_game(self):
-        """All players are set into motion, boundary checks, and collision checks
-        run continuously until a player runs out of lives."""
 
+    def create_assets(self):
         self.create_screen()
         self.create_pens()
         self.draw_border()
@@ -257,6 +256,11 @@ class Game(object):
         self.create_particles()
         self.draw_score()
         self.start_bgm()
+        
+    def start_game(self):
+        """All players are set into motion, boundary checks, and collision checks
+        run continuously until a player runs out of lives."""
+        self.create_assets()
         self.game_on = True
          
         while self.game_on:
