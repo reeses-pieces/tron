@@ -11,7 +11,6 @@ class Game(object):
     """Creates screen, draws border, creates all sprites, maps keys, draws score, and
     runs game loop."""
 
-    game_on = False
     # relative_controls = False
 
     def __init__(self, width=None, height=None, relative_controls=False):
@@ -240,19 +239,22 @@ class Game(object):
             os.system('afplay sounds/son_of_flynn.m4a&')
             os.system('say grid is live!')
 
+    def create_pens(self):
+        self.pen = turtle.Turtle()
+        self.score_pen = turtle.Turtle()
+        
     def start_game(self):
         """All players are set into motion, boundary checks, and collision checks
         run continuously until a player runs out of lives."""
 
         self.create_screen()
-        self.pen = turtle.Turtle()
+        self.create_pens()
         self.draw_border()
         self.create_player()
         self.create_particles()
-        self.score_pen = turtle.Turtle()
         self.draw_score()
-        self.game_on = True
         self.start_bgm()
+        self.game_on = True
          
         while self.game_on:
             # Updates screen only when loop is complete
