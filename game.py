@@ -197,7 +197,9 @@ class Game(object):
 
     def draw_score(self):
         """Using a turtle, this draws the score on the screen once, then clears once
-        the score changes. Start position is upper left corner."""
+        the score changes. Start position is upper left corner. A dedicated score
+        pen is needed because the clear function is called every time the score
+        is updated."""
         self.score_pen.clear()
         self.score_pen.setposition((self.width / -2) + 75, (self.height / 2) - 40)
         self.score_pen.pendown()
@@ -214,6 +216,7 @@ class Game(object):
         self.score_pen.hideturtle()
 
     def is_game_over(self):
+        """Checks to see if any player has run out of lives."""
         for player in self.players:
             if player.lives == 0:
                 return True
@@ -227,7 +230,7 @@ class Game(object):
                 winner = player.name
         self.score_pen.write(winner + ' wins!', align='center', font=("Verdana", 36, "bold"))
 
-    def reset(self):
+    def reset_grid(self):
         for player in self.players:
             x, y = self.random_coord()
             player.clear_lightcycle()
@@ -291,7 +294,7 @@ class Game(object):
                     self.particles_explode(player)
                     if os.name == 'posix':
                         os.system('afplay sounds/explosion.wav&')
-                    self.reset()
+                    self.reset_grid()
                     self.draw_score()
         
             if self.is_game_over():
