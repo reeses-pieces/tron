@@ -239,7 +239,7 @@ class Game(object):
     def start_bgm(self):
         if os.name == 'posix':
             os.system('killall afplay')
-            os.system('afplay sounds/son_of_flynn.m4a&')
+            os.system('afplay sounds/gameplay.m4a&')
             os.system('say grid is live!')
 
     def create_pens(self):
