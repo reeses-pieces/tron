@@ -3,6 +3,7 @@
 <!-- ![main menu](images/screenshots/main_menu.png?raw=true =800x600 "Main Menu") -->
 <!-- ![gameplay](images/screenshots/gameplay.png?raw=true =800x600 "Gameplay") -->
 
+Click the image for a video demo
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=w9NLE6MrQSg
 " target="_blank"><img src="images/screenshots/main_menu.png?raw=true" 
 alt="IMAGE main-menu" width="800" height="600" border="0" /></a>
