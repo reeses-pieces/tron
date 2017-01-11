@@ -257,6 +257,12 @@ class Game(object):
         self.create_particles()
         self.draw_score()
         self.start_bgm()
+
+    def set_controls(self):
+        if self.relative_controls:
+            self.set_relative_keyboard_bindings()
+        else:
+            self.set_abs_keyboard_bindings()
         
     def start_game(self):
         """All players are set into motion, boundary checks, and collision checks
@@ -267,13 +273,8 @@ class Game(object):
         while self.game_on:
             # Updates screen only when loop is complete
             turtle.update()
-            # Set controls based on menu setting
-            if self.relative_controls:
-                self.set_relative_keyboard_bindings()
-            else:
-                self.set_abs_keyboard_bindings()
-
             # Activate key mappings
+            self.set_controls()
             turtle.listen()
             # Set players into motion and add converted coords to positions
             for player in self.players:
@@ -305,7 +306,9 @@ class Game(object):
             if self.is_game_over():
                 self.game_on = False
 
-        # Game ends
+        self.end_game()
+
+    def end_game(self):
         self.display_winner()
         time.sleep(2)
         self.screen.clear()
