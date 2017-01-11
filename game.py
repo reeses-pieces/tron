@@ -142,18 +142,16 @@ class Game(object):
 
     def is_collision_with_enemy(self, player):
         """Collision check with other player."""
-        # Get the current position, iterate through the positions list, and don't check its own
-        # positions, check if position is in list
+        # Get the current position, iterate through the positions list, not checking itself, and
+        # check if position is in list
         for i in range(len(self.players)):
             if player.name != self.players[i].name:
                 for position in player.positions[-5:]:
-                    if position in self.players[i].positions:
-                        return True
+                    return position in self.players[i].positions
 
     def is_collision_with_self(self, player):
         for position in player.positions[-10:]: # Multiple positions to cover speed gap (0 - 3)
-            if position in player.positions[:-10]:
-                return True
+            return position in player.positions[:-10]
 
     def set_relative_keyboard_bindings(self):
         """Maps relative controls to player movement."""
@@ -192,7 +190,7 @@ class Game(object):
             self.abs_key_mapper(self.players[1], 'Right', 'Left', 'Down', 'Up')            
 
     def abs_key_mapper(self, player, left, right, accel, decel):
-        """Maps passed in args to player controls"""
+        """Maps args to player controls"""
         turtle.onkeypress(player.turn_left, left)
         turtle.onkeypress(player.turn_right, right)
         turtle.onkeypress(player.accelerate, accel)
