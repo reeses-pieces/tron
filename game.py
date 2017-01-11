@@ -79,25 +79,25 @@ class Game(object):
     def is_outside_boundary(self, player):
         """Checks if light cycle is out of bounds using border coord.
         Deviation of 3 on edge to cosmetically match impact."""
-        if (abs(player.xcor()) > abs(self.x_boundary) - 3 or 
-            abs(player.ycor()) > abs(self.y_boundary) - 3):
-            return True
+        return (abs(player.xcor()) > abs(self.x_boundary) - 3 or 
+        abs(player.ycor()) > abs(self.y_boundary) - 3)
+            
 
     def position_range_adder(self, player):
         """If speed is > 1, the positions aren't recorded between the speed gap. Therefore,
         this function is needed to fill in the gaps and append the missing positions"""
-        prev_x_pos, prev_y_pos = player.positions[-2] # tuple unpacking
+        prev_x_pos, prev_y_pos = player.positions[-2]
         next_x_pos, next_y_pos = player.positions[-1]
         positions_range = []
         # X coord are changing and the difference between them is greater than 1
-        if abs(prev_x_pos - next_x_pos) > 1:
+        if self.difference_greater_than_one(prev_x_pos, next_x_pos):
             start = min(prev_x_pos, next_x_pos) + 1
             end = max(prev_x_pos, next_x_pos)
             for x_position in range(start, end):
                 coord = (x_position, prev_y_pos)
                 positions_range.append(coord)
         # Y coord are changing and the difference between them is greater than 1
-        elif abs(prev_y_pos - next_y_pos) > 1:
+        elif self.difference_greater_than_one(prev_y_pos, next_y_pos):
             start = min(prev_y_pos, next_y_pos) + 1
             end = max(prev_y_pos, next_y_pos)
             for y_position in range(start, end):
@@ -108,6 +108,9 @@ class Game(object):
             for position in positions_range:
                 if position not in player.positions:
                     player.positions.append(position)
+
+    def difference_greater_than_one(self, prev_pos, next_pos):
+        return abs(prev_pos - next_pos) > 1
 
     def create_player(self, number=2):
         """Two players are always created. P1 is blue.
